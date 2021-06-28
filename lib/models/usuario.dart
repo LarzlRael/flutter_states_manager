@@ -1,8 +1,8 @@
 class Usuario {
   String nombre;
   int edad;
-  bool show;
   List<String> profesiones;
+  bool show;
 
   Usuario({
     required this.nombre,

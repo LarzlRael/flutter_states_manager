@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:singleton/models/usuario.dart';
-import 'package:singleton/usuario/usuario_service.dart';
+import 'package:singleton/services/usuario_service.dart';
 
 class Pagina2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final usuarioService = Provider.of<UsuarioService>(context);
     return Scaffold(
       appBar: AppBar(
-        title: StreamBuilder(
-          stream: usuarioService.usuarioStream,
-          builder: (BuildContext context, AsyncSnapshot<Usuario> snapshot) {
-            return snapshot.hasData
-                ? Text('Nombre : ${snapshot.data!.nombre}')
-                : Text('pagina 2 ');
-          },
-        ),
+        title: usuarioService.existeUsuario
+            ? Text('Nombre ${usuarioService.usuario.nombre}')
+            : Text('Pagina 2'),
       ),
       body: Center(
         child: Column(
@@ -28,12 +25,15 @@ class Pagina2Page extends StatelessWidget {
               ),
               onPressed: () {
                 final newUser = Usuario(
-                  nombre: 'Larz',
+                  nombre: 'Larzdosan',
                   edad: 20,
-                  profesiones: [],
+                  profesiones: [
+                    'Fullstack developer',
+                    'video jugador experto :F'
+                  ],
                   show: true,
                 );
-                usuarioService.cargarUsuario(newUser);
+                usuarioService.setUsuario = newUser;
               },
             ),
             MaterialButton(
@@ -43,7 +43,7 @@ class Pagina2Page extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
-                usuarioService.cambiarEdad(30);
+                usuarioService.cambiarEdad(45);
               },
             ),
             MaterialButton(
@@ -52,7 +52,7 @@ class Pagina2Page extends StatelessWidget {
                 'Añadir profesion',
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: () {},
+              onPressed: usuarioService.agregarProfesion,
             ),
           ],
         ),
