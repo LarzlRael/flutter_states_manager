@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:singleton/block/usuario/usuario_bloc.dart';
 import 'package:singleton/models/usuario.dart';
-import 'package:singleton/services/usuario_service.dart';
+import 'package:singleton/usuario/usuario_service.dart';
 
 class Pagina1Page extends StatelessWidget {
   @override
@@ -11,24 +8,15 @@ class Pagina1Page extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Pagina 1'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              BlocProvider.of<UsuarioBloc>(context).add(BorrarUsuario());
-            },
-          )
-        ],
       ),
-      body: BlocBuilder<UsuarioBloc, UsuarioState>(
-        builder: (_, state) {
-          if (state.existeUsuario) {
-            return InformacionUsuario(usuario: state.usuario!);
-          } else {
-            return Center(
-              child: Text('No hay usuario seleccionado'),
-            );
-          }
+      body: StreamBuilder(
+        stream: usuarioService.usuarioStream,
+        builder: (BuildContext context, AsyncSnapshot<Usuario> snapshot) {
+          return snapshot.hasData
+              ? InformacionUsuario(usuario: snapshot.data!)
+              : Center(
+                  child: Text('No hay informacion del usuario'),
+                );
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -63,12 +51,9 @@ class InformacionUsuario extends StatelessWidget {
           Text('Profesiones',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           Divider(),
-          ...usuario.profesiones
-              .map((profesion) => ListTile(
-                    title: Text(profesion),
-                  ))
-              .toList()
-          // ListTile(title: Text('Profesion 1')),
+          ListTile(title: Text('Profesion 1')),
+          ListTile(title: Text('Profesion 1')),
+          ListTile(title: Text('Profesion 1')),
         ],
       ),
     );
